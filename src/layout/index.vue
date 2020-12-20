@@ -10,24 +10,7 @@
                 <img src="https://2x.antdv.com/logo.svg?42c11bfdd0f3e3c36e0f89a94769e2f7" alt="" />
                 <span>Ant Desigin Vue</span>
             </div>
-            <a-menu theme="dark" v-model:selectedKeys="selectedKeys" @click="selectMenu" mode="inline">
-                <template v-for="item in routes">
-                    <a-menu-item :key="item.path" v-if="!item.children">
-                        <pie-chart-outlined />
-                        <span>{{ item.meta && item.meta.title }}</span>
-                    </a-menu-item>
-                    <a-sub-menu :key="item.path" v-else>
-                        <template #title>
-                            <span
-                                ><user-outlined /><span>{{ item.meta.title }}</span></span
-                            >
-                        </template>
-                        <a-menu-item v-for="child in item.children" :key="child.path">
-                            {{ child.meta && child.meta.title }}
-                        </a-menu-item>
-                    </a-sub-menu>
-                </template>
-            </a-menu>
+           <Aside/>
         </a-layout-sider>
         <a-layout>
             <a-layout-header class="header">
@@ -64,17 +47,9 @@
     </a-layout>
 </template>
 <script lang="ts">
-import {
-    PieChartOutlined,
-    DesktopOutlined,
-    UserOutlined,
-    TeamOutlined,
-    FileOutlined,
-    CaretDownOutlined,
-} from "@ant-design/icons-vue";
 import { defineComponent, reactive, ref, onMounted, getCurrentInstance } from "vue";
-import { useRouter } from "vue-router";
 import { getList } from "../apis/user";
+import Aside from './components/Aside.vue'
 interface MenuInfo {
     //点击菜单返回的参数
     item: any;
@@ -89,12 +64,7 @@ interface UserInfo {
 }
 export default defineComponent({
     components: {
-        PieChartOutlined,
-        DesktopOutlined,
-        UserOutlined,
-        TeamOutlined,
-        FileOutlined,
-        CaretDownOutlined,
+        Aside
     },
     setup() {
         onMounted(async () => {
@@ -103,34 +73,16 @@ export default defineComponent({
             getList().then((res) => {
                 console.log(res, "res111");
             });
-            console.log(routes, "routes");
         });
-        let collapsed = ref<boolean>(false); //菜单折叠
-        let selectedKeys: Array<string> = reactive(["/tip"]); //菜单默认选中项
-        const router = useRouter();
-        let currentPage = ref<string>("tip");
-        const routes = router.options.routes;
         const userInfo = reactive<UserInfo>({
             // avatar: "https://2x.antdv.com/logo.svg?42c11bfdd0f3e3c36e0f89a94769e2f7",
             avatar: "",
             userName: "admin",
         });
-        const selectMenu = ({ key, keyPath }: MenuInfo) => {
-            currentPage.value = keyPath
-                .reverse()
-                .join("")
-                .replace("/", "");
-            router.push(key);
-        };
         const logout = () => {
             console.log("logout");
         };
         return {
-            collapsed,
-            selectedKeys,
-            routes,
-            selectMenu,
-            currentPage,
             logout,
             userInfo,
         };

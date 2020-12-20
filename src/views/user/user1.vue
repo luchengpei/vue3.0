@@ -6,6 +6,7 @@
 <template>
     <div>
         user1
+        <i class="icon icon-header-logo"></i>
     </div>
 </template>
 

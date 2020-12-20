@@ -1,0 +1,16 @@
+i[class^=icon] {
+    display: inline-block;
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    // width: 21px;
+    // height: 21px;
+}
+
+
+.icon-size-21 {
+    width: 21px;
+    height: 21px;
+}
+.icon-header-logo {
+    background-image: url("~@/assets/logo.png");
+}
