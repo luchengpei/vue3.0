@@ -8,9 +8,9 @@
     >
       <template v-for="item in routes">
           <!-- 一级 -->
-        <a-menu-item :key="item.path" v-if="!item.children && !item.meta.hidden">
+        <a-menu-item :key="item.children[0].path" v-if="hasOneChildren(item)">
           <pie-chart-outlined />
-          <span>{{ item.meta && item.meta.title }}</span>
+          <span>{{ item.children[0].meta &&  item.children[0].meta.title }}</span>
         </a-menu-item>
         <!-- 有子级 -->
         <Menu v-else-if="item.children" :key="item.path" :menu="item"/>
@@ -45,17 +45,29 @@ export default defineComponent({
     const router = useRouter();
     let currentPage = ref<string>("tip");
     const routes = router.options.routes;
-    console.log(routes,'wocac')
     const selectMenu = ({ key, keyPath }: MenuInfo) => {
+      console.log(key,'selectedKeys')
+      console.log(keyPath,'selectedKeys')
+      selectedKeys[0] = key
+      // console.log(selectedKeys,'selectedKeys')
       currentPage.value = keyPath.reverse().join("").replace("/", "");
       router.push(key);
     };
+    const hasOneChildren = (data:any) => {
+      //不存在子级的情况
+      if(!data.children) return false
+      //过滤隐藏的路由
+      const routers = data.children.filter((item:any)=>item.meta.hidden?false:true)
+      if(routers.length===1) return true
+      return false
+    }
     return {
       collapsed,
       selectedKeys,
       routes,
       currentPage,
-      selectMenu
+      selectMenu,
+      hasOneChildren
     };
   },
 });
